@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>SwipeView</title>
+	<link href="style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="swipeview.js"></script>
+</head>
+
+<body>
+<div id="header">
+	<img src="header.png" width="320" height="100">
+</div>
+<div id="now">
+	<img src="now.png" width="95" height="44">
+</div>
+<div id="times">
+	<img src="times.png" width="1602" height="44">
+</div>
+<div id="channels">
+	<img src="menu.png" width="95" height="791">
+</div>
+
+	<div id="wrapper"></div>
+
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<script type="text/javascript">
+
+function swiping(){
+//console.log(xx);	
+
+  var div = $('#times');
+  var elm = div.get(0);
+  var div2 = $('#wrapper');
+  var elm2 = div2.get(0);
+  console.log( elm.style.webkitTransform)
+ // elm.style.webkitTransform = 'translate3d(' + xx + 'px,0,0)';
+}
+
+
+setInterval(function(){myTimer()},1000);
+
+
+function myTimer()
+{
+var d=new Date();
+var t=d.toLocaleTimeString();
+console.log(t);
+swiping();
+}
+
+   $(window).scroll(function () { 
+		if(document.body.scrollTop>=100){
+		      console.log("anchored"+document.body.scrollTop);
+				$("#times").css("position","fixed");  
+				$("#times").css("top","0");  
+				$("#now").css("position","fixed");  
+				$("#now").css("top","0");  
+				
+			  }else{
+				   console.log("reset"+document.body.scrollTop);
+				$("#times").css("position","absolute");  
+				$("#times").css("top","100px"); 
+						$("#now").css("position","absolute");  
+				$("#now").css("top","100px"); 
+			  }
+    });
+	
+	$('#now').click(function(){      
+		$('body,html').animate({
+				scrollTop: 0
+			}, 300);
+			return false;
+});
+
+
+     
+
+var	carousel,
+	el,
+	i,
+	page,
+	slides = [
+		'<img src="0.png" width="320" height="791">',
+		'<img src="1.png" width="320" height="791">',
+		'<img src="2.png" width="320" height="791">',
+		'<img src="3.png" width="320" height="791">',
+		'<img src="4.png" width="320" height="791">'
+	];
+
+carousel = new SwipeView('#wrapper', {
+	numberOfPages: slides.length,
+	hastyPageFlip: true
+});
+
+// Load initial data
+for (i=0; i<3; i++) {
+	page = i==0 ? slides.length-1 : i-1;
+
+	el = document.createElement('span');
+	el.innerHTML = slides[page];
+	carousel.masterPages[i].appendChild(el)
+}
+
+carousel.onFlip(function () {
+	console.log("flip");
+	var el,
+		upcoming,
+		i;
+
+	for (i=0; i<3; i++) {
+		upcoming = carousel.masterPages[i].dataset.upcomingPageIndex;
+
+		if (upcoming != carousel.masterPages[i].dataset.pageIndex) {
+			el = carousel.masterPages[i].querySelector('span');
+			el.innerHTML = slides[upcoming];
+		}
+	}
+});
+
+</script>
+
+
+</body>
+</html>
